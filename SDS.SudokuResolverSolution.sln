@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDS.SudokuResolver.Core", "Core\SDS.SudokuResolver.Core.csproj", "{8BF23698-6C57-4B43-B3BD-5C83B53CDDA4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{539F1F83-B91B-4777-AE96-9F730DFA9D9B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SDS.SudokuResolver.ConsoleApp", "ConsoleApp\SDS.SudokuResolver.ConsoleApp.csproj", "{399566ED-656C-445D-A2A6-20DFE154440F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8BF23698-6C57-4B43-B3BD-5C83B53CDDA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8BF23698-6C57-4B43-B3BD-5C83B53CDDA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8BF23698-6C57-4B43-B3BD-5C83B53CDDA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8BF23698-6C57-4B43-B3BD-5C83B53CDDA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{399566ED-656C-445D-A2A6-20DFE154440F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{399566ED-656C-445D-A2A6-20DFE154440F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{399566ED-656C-445D-A2A6-20DFE154440F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{399566ED-656C-445D-A2A6-20DFE154440F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{399566ED-656C-445D-A2A6-20DFE154440F} = {539F1F83-B91B-4777-AE96-9F730DFA9D9B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3BC488C8-B200-4693-967F-208B00805D53}
+	EndGlobalSection
+EndGlobal
