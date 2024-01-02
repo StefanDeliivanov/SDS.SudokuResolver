@@ -12,25 +12,25 @@ namespace SDS.SudokuResolver.ConsoleApp
             var engine = new ResolveEngine();
 
             Console.WriteLine(AsciiArt.welcomeTextShimrod);
-            Console.WriteLine($"If you want to exit the application at any time just write the command '{stopProgramCommand}'");
+            Console.WriteLine($"If you want to exit the application at any time just write the command '{stopProgramCommand}'!");
             string input = string.Empty;         
 
-            while (IsNotExitCommand(input))
+            while (IsNotExitCommand())
             {
                 SelectLoadType();
 
-                if (IsNotExitCommand(input))
+                if (IsNotExitCommand())
                 {
                     if (IsManuallyLoadType())
                     {
                         var board = CreateBoard();
+                        bool printBoard = true;
 
                         while (true)
                         {
-                            bool printBoard = true;
-
                             if (printBoard)
                             {
+                                Console.WriteLine();
                                 Printer.PrintBoard(board);
                                 Console.WriteLine();
                             }
@@ -38,7 +38,7 @@ namespace SDS.SudokuResolver.ConsoleApp
                             Console.WriteLine($"Is the board correct? {yesOrNoPossibleAnswers}: ");
                             input = Console.ReadLine();
 
-                            if (IsNotExitCommand(input))
+                            if (IsNotExitCommand())
                             {
                                 if (IsYesAnswer())
                                 {
@@ -48,6 +48,7 @@ namespace SDS.SudokuResolver.ConsoleApp
                                     {
                                         Console.WriteLine(defaultSuccessMessage);
                                         Printer.PrintBoard(result.SolvedBoard, 50);
+                                        Thread.Sleep(100);
                                     }
                                     else Console.WriteLine(defaultFailMessage);
 
@@ -55,18 +56,63 @@ namespace SDS.SudokuResolver.ConsoleApp
                                 }
                                 else if (IsNoAnswer())
                                 {
-                                    board = CreateBoard();
-                                    printBoard = true;
+                                    while (true)
+                                    {
+                                        Console.WriteLine($"Would you like to start from scratch or edit specific row? '{ConsoleEditBoardTypes.Start_over}/{ConsoleEditBoardTypes.Specific_row}': ");
+                                        input = Console.ReadLine();
+
+                                        if (IsNotExitCommand())
+                                        {
+                                            if (input == ConsoleEditBoardTypes.Start_over.ToString())
+                                            {
+                                                board = CreateBoard();
+                                                printBoard = true;
+                                                break;
+                                            }
+                                            else if (input == ConsoleEditBoardTypes.Specific_row.ToString())
+                                            {
+                                                var rx = new Regex(consoleEditRowRegexPattern);
+                                                while (true)
+                                                {
+                                                    input = EditRow();
+
+                                                    while (true)
+                                                    {
+                                                        if (IsNotExitCommand() && rx.IsMatch(input))
+                                                            break;
+
+                                                        Console.WriteLine(invalidCommandMessage);
+                                                        input = EditRow();
+                                                    }
+
+                                                    string[] editRowInput = input.Split(consoleEditRowDelimiter, StringSplitOptions.RemoveEmptyEntries).ToArray();
+                                                    int rowNumber = int.Parse(editRowInput[0].Split(' ', StringSplitOptions.RemoveEmptyEntries).Skip(1).First());
+                                                    int[] rowValues = ParseRowValues(editRowInput[1]);
+
+                                                    for (int i = 0; i < gridSize; i++)
+                                                    {
+                                                        board[rowNumber -1, i] = rowValues[i];
+                                                    }
+                                                    break;
+                                                }
+                                                printBoard = true;
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                Console.WriteLine(invalidCommandMessage);
+                                                continue;
+                                            }
+                                        }
+                                    }
+                                    
                                     continue;
                                 }
                                 else
                                 {
-                                    while (true)
-                                    {
-                                        Console.WriteLine(invalidCommandMessage);
-                                        printBoard = false;
-                                        continue;
-                                    }
+                                    Console.WriteLine(invalidCommandMessage);
+                                    printBoard = false;
+                                    continue;
                                 }
                             }
                         }
@@ -89,9 +135,9 @@ namespace SDS.SudokuResolver.ConsoleApp
                 }
             }
 
-            bool IsNotExitCommand(string command)
+            bool IsNotExitCommand()
             {
-                if (command == stopProgramCommand)
+                if (input == stopProgramCommand)
                     ExitProgram();
 
                 return true;
@@ -119,7 +165,7 @@ namespace SDS.SudokuResolver.ConsoleApp
                     Console.Write($"Would you like to load another board? {yesOrNoPossibleAnswers}: ");
                     input = Console.ReadLine();
 
-                    if (IsNotExitCommand(input))
+                    if (IsNotExitCommand())
                     {
                         if (IsYesAnswer())
                             break;
@@ -138,33 +184,43 @@ namespace SDS.SudokuResolver.ConsoleApp
             {
                 var board = new int[gridSize, gridSize];
                 var rx = new Regex(consoleReadRowRegexPattern);
-                string row;
 
                 for (int i = 0; i < gridSize; i++)
                 {
-                    row = ReadRow(i + 1);
+                    input = ReadRow(i + 1);
 
                     while (true)
                     {
-                        if (IsNotExitCommand(row) && rx.IsMatch(row))
+                        if (IsNotExitCommand() && rx.IsMatch(input))
                             break;
 
                         Console.WriteLine(invalidCommandMessage);
-                        row = ReadRow(i + 1);
+                        input = ReadRow(i + 1);
                     }
 
-                    int[] validRow = row.Split(consoleReadRowDelimiter, StringSplitOptions.RemoveEmptyEntries).Select(x => int.Parse(x)).ToArray();
+                    int[] rowValues = ParseRowValues(input);
                     for (int j = 0; j < gridSize; j++)
                     {
-                        board[i, j] = validRow[j];
+                        board[i, j] = rowValues[j];
                     }
                 }
                 return board;
             }
 
+            int[] ParseRowValues(string rowValues)
+            {
+                return rowValues.Split(consoleReadRowDelimiter, StringSplitOptions.RemoveEmptyEntries).Select(int.Parse).ToArray();
+            }
+
             string ReadRow(int i)
             {
                 Console.WriteLine($"Please enter values for row #{i} following the pattern '{consoleReadRowUIPattern}' where '#' represents a single digit from the range 0 to 9 (0 represents a blank space): ");
+                return Console.ReadLine();
+            }
+
+            string EditRow()
+            {
+                Console.WriteLine($"Please enter the row number and row values following the pattern '{consoleEditRowUIPattern}' where '#' represents a single digit from the range 0 to 9 (0 represents a blank space): ");
                 return Console.ReadLine();
             }
 

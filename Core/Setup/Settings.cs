@@ -6,6 +6,12 @@
         public const string defaultSuccessMessage = "Board solved successfully!";
         public const string defaultFailMessage = "Board is unsolvable!";
 
+        public enum YesOrNo
+        {
+            Yes,
+            No
+        }
+
         public class ConsoleAppConstants
         {
             public const string stopProgramCommand = "Exit";
@@ -16,6 +22,7 @@
             public const char dash = '-';
             public const char verticalBar = '|';
             public const string consoleReadRowDelimiter = ", ";
+            public const string consoleEditRowDelimiter = " - ";
 
             public static readonly string defaultSpace = new string(emptySpace, 2);
             public static readonly string rowDelimiter = emptySpace + new string(dash, 35);
@@ -24,7 +31,9 @@
             public static readonly string endColumnDelimiter = defaultSpace + verticalBar;
             public static readonly string numbersDelimiter = defaultSpace;
             public static readonly string consoleReadRowRegexPattern = @"^\d, \d, \d, \d, \d, \d, \d, \d, \d$";
+            public static readonly string consoleEditRowRegexPattern = @"^row \d - \d, \d, \d, \d, \d, \d, \d, \d, \d$";
             public static readonly string consoleReadRowUIPattern = string.Join(consoleReadRowDelimiter, new string('#', 9).ToCharArray());
+            public static readonly string consoleEditRowUIPattern = $"row # - {consoleReadRowUIPattern}";
 
             public enum ConsoleLoadBoardTypes
             {
@@ -32,10 +41,10 @@
                 Manually
             }
 
-            public enum YesOrNo
+            public enum ConsoleEditBoardTypes
             {
-                Yes,
-                No
+                Start_over,
+                Specific_row
             }
 
             public class AsciiArt
